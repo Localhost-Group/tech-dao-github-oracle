@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  auth:
+    build: "./auth-service"
+    ports:
+      - 3000:3000
+    networks:
+      - rabbit_mq_net
+    links:
+      - rabbitmq
+
+  githubtokens:
+    build: "./github-tokens"
+    networks:
+      - rabbit_mq_net
+    links:
+      - rabbitmq
+
+  gitlabtokens:
+    build: "./gitlab-tokens"
+    networks:
+      - rabbit_mq_net
+    links:
+      - rabbitmq
+
+  stacktokens:
+    build: "./stack-token"
+    networks:
+      - rabbit_mq_net
+    links:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - rabbit_mq_net
+
+networks:
+  rabbit_mq_net:
+    driver: bridge
